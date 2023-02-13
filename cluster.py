@@ -6,6 +6,7 @@ import OpenCV_Cluster.cut
 import OpenCV_Cluster.cluster
 
 import Yolov5_Cluster.cluster
+import Yolov5_Cluster.delete_duplicates
 
 #OPENCV_CLUSTER
 
@@ -18,6 +19,9 @@ CROP_FOLDER = "Crop/"
 CROP_FOLDER_SMALL = "Crop_Small"
 CLUSTER_FOLDER = "Cluster03_big_nog"
 LABEL_YOLO = "Yolov5_Cluster/Label"
+CLUSTER_YOLO = "Yolo_Cluster"
+CLUSTER_YOLO_CONF = "Yolo_Cluster_Conf"
+CLUSTER_YOLO_CONF_DEL = "Yolo_Cluster_Conf_Del"
 #the cropping information for the cut function
 MIN_WIDTH = 50
 MIN_HEIGHT = 40
@@ -30,6 +34,8 @@ os.system("mkdir Crop")
 os.system("mkdir Crop_Small")
 os.system("mkdir Cluster03_big_nog")
 os.system("mkdir Yolov5_Cluster/Label")
+os.system("mkdir Yolo_Cluster")
+os.system("mkdir Yolo_Cluster_Conf")
 
 #counter variables for the cluster function
 I = 0
@@ -57,8 +63,9 @@ COUNTER = 0
 
 #call the filter function -> filters the images where there is something happening
 
-Yolov5_Cluster.cluster.load_and_run_yolo(FILTERED_IMAGES_ORIGINAL, LABEL_YOLO)
+#Yolov5_Cluster.cluster.load_and_run_yolo(FILTERED_IMAGES_ORIGINAL, LABEL_YOLO, CLUSTER_YOLO_CONF)
 
-#call the detect function -> detects the boxes where there could be an insect and also clusters them
+#calls the delete_dups function -> get rid of all the duplicates in our cluster
+Yolov5_Cluster.delete_duplicates.delete_dups(CLUSTER_YOLO_CONF, CLUSTER_YOLO_CONF_DEL)
 
 #call the crop function -> crops the image so a human can look over it

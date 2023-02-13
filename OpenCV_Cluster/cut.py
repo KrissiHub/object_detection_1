@@ -25,7 +25,7 @@ def regions_of_interest(read_folder, original_image_folder, label_folder, min_wi
 		
 		original_image = cv.imread(read_folder + "/" + file)
 		#first we create a mask, so we can concentrate on the important ares
-		original_image = cut_abundance(original_image)
+		original_image = cut_abundance(original_image, False)
 		#calculate the average brighntess of the image
 		brighntess = np.average(norm(original_image, axis=2)) / np.sqrt(3)
 		#depending on the brighntess of the image, we use two different segmentation models
@@ -72,19 +72,33 @@ def regions_of_interest(read_folder, original_image_folder, label_folder, min_wi
 	
 
 #cuts the grass part and the time stamps out of the image
-def cut_abundance(image_to_be_circled):
+def cut_abundance(image_to_be_circled, timestamp_removal):
 	#first we need to get the center coordinates of the picture
 	(h,w) = image_to_be_circled.shape[:2]
+	(h_org, w_org) = (h,w)
 	h -= 450
 	w -= 200
+	or_size = h_org * w_org
+	radius = int(or_size / 6665)
 
 	#we save the original height and width from the image
 	#now create the default mask
 	mask = np.zeros_like(image_to_be_circled)
-	mask = cv.circle(mask, (w//2, h//2), 1850, (255,255,255), -1)
+	mask = cv.circle(mask, (w_org//2, h_org//2), radius, (255,255,255), -1)
+	#if we also want to remove the timestamp, here not for opencv but for yolo detection reasons
+	#note: this only works for our dataset and need to be be adjusted for other images later on
+	if timestamp_removal:
+		timestamp_mask = np.zeros_like(image_to_be_circled)
+		#switch the mask to white
+		timestamp_mask[:,:] = [255,255,255]
+		#draw a black rectangle where the timestamp is
+		timestamp_mask = cv.rectangle(timestamp_mask, (w_org//2 - (w_org//4), 0), (w_org - (w_org//4), h_org//2 - (h_org//3)), (0,0,0), -1)
+		#subtract this from the original image
+		image_to_be_circled = cv.bitwise_and(timestamp_mask, image_to_be_circled)
+		return image_to_be_circled
 	#subtracts the mask and the original image so the abundance is now gone
-	mask_out = cv.subtract(mask, image_to_be_circled)
-	mask_out = cv.subtract(mask, mask_out)
+	mask_out = cv.bitwise_and(mask, image_to_be_circled)
+	mask_out = cv.bitwise_and(mask, mask_out)
 	return mask_out
 
 
