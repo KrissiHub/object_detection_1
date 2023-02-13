@@ -35,7 +35,7 @@ def cluster_images(counter, i, read_folder, read_folder_big):
             continue
         read_image = cv.imread(read_folder + "/" + filename)
         #convert the image to RGB
-        read_image = cv.cvtColor(read_image, cv.COLOR_BGR2GRAY)
+        #read_image = cv.cvtColor(read_image, cv.COLOR_BGR2GRAY)
         counter += 1
         i += 1
         if key_or_value(filename, cluster_dict):
@@ -59,17 +59,17 @@ def cluster_images(counter, i, read_folder, read_folder_big):
             if key_or_value(filename_compare, cluster_dict):
                 continue
             read_image_compare = cv.imread(read_folder + "/" + filename_compare)  
-            read_image_compare = cv.cvtColor(read_image_compare, cv.COLOR_BGR2GRAY)
+            #read_image_compare = cv.cvtColor(read_image_compare, cv.COLOR_BGR2GRAY)
             #calculate the histograms
             hist1 = cv.calcHist(read_image, [0], None, [256], [0,256])
             hist2 = cv.calcHist(read_image_compare, [0], None, [256], [0,256])
             compare_value = (cv.compareHist(hist1, hist2,cv.HISTCMP_CORREL))
             print(compare_value)
             #if the similarity is big enough for the images to be the same
-            if compare_value >= 0.2:
+            if compare_value >= 0.1:
                 cluster_dict[counter] +=  " " + filename_compare
 
-    #write_cluster(cluster_dict, read_folder, read_folder_big)
+    write_cluster(cluster_dict, read_folder, read_folder_big)
     print(cluster_dict.items())
     return cluster_dict
         
@@ -77,12 +77,12 @@ def cluster_images(counter, i, read_folder, read_folder_big):
 
 def write_cluster(cluster_dict, read_folder, read_folder_big):
     for key in cluster_dict.keys():
-        os_ = "mkdir " + "Cluster/Cluster_" + str(key)
+        os_ = "mkdir " + "Cluster03_big_nog/Cluster_" + str(key)
         os.system(os_) 
         cluster_images = cluster_dict[key].split()
         for item in cluster_images:
             write_img = cv.imread(read_folder_big + item)
-            cv.imwrite(("Cluster/Cluster_" + str(key) + "/" + item), write_img)
+            cv.imwrite(("Cluster03_big_nog/Cluster_" + str(key) + "/" + item), write_img)
 
 
 
