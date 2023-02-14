@@ -22,10 +22,13 @@ def regions_of_interest(read_folder, original_image_folder, label_folder, min_wi
 	for file in sorted(os.listdir(read_folder)):
 		if file.startswith("."):
 			continue
-		
 		original_image = cv.imread(read_folder + "/" + file)
+		cv.imshow("Original Image", original_image)
+		k = cv.waitKey()
 		#first we create a mask, so we can concentrate on the important ares
 		original_image = cut_abundance(original_image, False)
+		cv.imshow("Without Abundance", original_image)
+		k = cv.waitKey()
 		#calculate the average brighntess of the image
 		brighntess = np.average(norm(original_image, axis=2)) / np.sqrt(3)
 		#depending on the brighntess of the image, we use two different segmentation models
@@ -33,12 +36,20 @@ def regions_of_interest(read_folder, original_image_folder, label_folder, min_wi
 			is_dark = True
 			#make the image brighter so we can find all the insects
 			brighter_image = cv.convertScaleAbs(original_image, 1, 10)
+			cv.imshow("Brighter Image", original_image)
+			k = cv.waitKey()
 			#now we convert the RGB image to gray scale
 			gray_image = cv.cvtColor(brighter_image, cv.COLOR_BGR2GRAY)
+			cv.imshow("Grayscale", original_image)
+			k = cv.waitKey()
 			#now we blur the image
 			blur_image = cv.GaussianBlur(gray_image, (99, 99), 0)
+			cv.imshow("Gaussian Blur", original_image)
+			k = cv.waitKey()
 			#threshhold to find the brightest spots (insects)
 			thresh, thresh_image = cv.threshold(blur_image, 150, 255, cv.THRESH_BINARY)
+			cv.imshow("Threshed Image", thresh_image)
+			k = cv.waitKey()
 			#now we find the contours of the highlighted areas
 			contours, hirarchy = cv.findContours(thresh_image, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 			for contour in contours:
@@ -54,10 +65,16 @@ def regions_of_interest(read_folder, original_image_folder, label_folder, min_wi
 			is_dark = False
 			#now we convert the RGB image to gray scale
 			gray_image = cv.cvtColor(original_image, cv.COLOR_BGR2GRAY)
+			cv.imshow("Grayscale", gray_image)
+			k = cv.waitKey()
 			#now we blur the image
 			blur_image = cv.GaussianBlur(gray_image, (5, 5 ), 0)
+			cv.imshow("Gaussian Blur", blur_image)
+			k = cv.waitKey()
 			#threshhold to find the brightest spots (insects)
 			thresh, thresh_image = cv.threshold(blur_image, 50, 255, cv.THRESH_BINARY)
+			cv.imshow("Threshhold", thresh_image)
+			k = cv.waitKey()
 			#save the contours 
 			contours, hirarchy = cv.findContours(thresh_image, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 			for contour in contours:
@@ -126,6 +143,10 @@ def cut_and_save(bounding_box_info, image, is_dark, img_name_counter, original_i
 				crop = org_img[crop_info["y"]:crop_info["y"]+crop_info["h"]+200, crop_info["x"]:crop_info["x"]+crop_info["w"]+200]
 				cut_name = crop_folder + image
 				cut_name_small = crop_folder_small + image
+				cv.imshow("Cropped Image Small", crop_small)
+				k = cv.waitKey()
+				cv.imshow("Cropped Image Big", crop)
+				k = cv.waitKey()
 				#check if file already exists, so we dont write over it
 				if os.path.isfile(crop_folder + image):
 					image_without_extension = os.path.splitext(image)[0]
@@ -149,6 +170,7 @@ def cut_and_save(bounding_box_info, image, is_dark, img_name_counter, original_i
 			if (bounding_box_info["w"] >= MIN_WIDTH) and (bounding_box_info["h"] >= MIN_HEIGHT):
 				#look for the original image  
 				split_append = image.split("%")
+				print("Hallo")
 				#this is the name of the original file and place
 				original_image_name = original_image_folder + "/" + split_append[1]
 				#safe the bounding box info as a string to save in the txt
@@ -163,6 +185,11 @@ def cut_and_save(bounding_box_info, image, is_dark, img_name_counter, original_i
 				crop = org_img[crop_info["y"]:crop_info["y"]+crop_info["h"]+200, crop_info["x"]:crop_info["x"]+crop_info["w"]+200]
 				cut_name = crop_folder + image
 				cut_name_small = crop_folder_small + image
+				cv.imshow("Crop", crop)
+				k = cv.waitKey()
+				cv.imshow("Crop Small", crop_small)
+				k = cv.waitKey()
+				os.sys.exit()
 				#check if file already exists, so we dont write over it
 				if os.path.isfile(crop_folder + image):
 					image_without_extension = os.path.splitext(image)[0]

@@ -32,7 +32,8 @@ def delete_dups(read_directory, write_directory):
                     os.remove(tail)
                 tail = read_directory + "/" + dirs + "/" + dir + "/" + file
             tail = None
-            
+       
+
         
 
 
