@@ -4,6 +4,7 @@ import OpenCV_Cluster.get_diff
 import OpenCV_Cluster.save_originals
 import OpenCV_Cluster.cut
 import OpenCV_Cluster.cluster
+import OpenCV_Cluster.kmeans
 
 import Yolov5_Cluster.cluster
 import Yolov5_Cluster.delete_duplicates
@@ -22,6 +23,8 @@ LABEL_YOLO = "Yolov5_Cluster/Label"
 CLUSTER_YOLO = "Yolo_Cluster"
 CLUSTER_YOLO_CONF = "Yolo_Cluster_Conf"
 CLUSTER_YOLO_CONF_DEL = "Yolo_Cluster_Conf_Del"
+KMEANS_CLUSTER = "Kmeans_Cluster"
+KMEANS_TEST = "object_detection_1/Test_Kmeans"
 #the cropping information for the cut function
 MIN_WIDTH = 50
 MIN_HEIGHT = 40
@@ -36,6 +39,7 @@ os.system("mkdir Cluster03_big_nog")
 os.system("mkdir Yolov5_Cluster/Label")
 os.system("mkdir Yolo_Cluster")
 os.system("mkdir Yolo_Cluster_Conf")
+os.system("mkdir Kmeans_Cluster")
 
 #counter variables for the cluster function
 I = 0
@@ -57,6 +61,7 @@ COUNTER = 0
 #call the cluster funtcion -> clusters the cut images, so a human can look over it
 
 #OpenCV_Cluster.cluster.cluster_images(COUNTER, I, CROP_FOLDER, CROP_FOLDER)
+OpenCV_Cluster.kmeans.image_feature(KMEANS_TEST, KMEANS_CLUSTER)
 
 
 #YOLOV5_CLUSTER
@@ -66,6 +71,6 @@ COUNTER = 0
 #Yolov5_Cluster.cluster.load_and_run_yolo(FILTERED_IMAGES_ORIGINAL, LABEL_YOLO, CLUSTER_YOLO_CONF)
 
 #calls the delete_dups function -> get rid of all the duplicates in our cluster
-Yolov5_Cluster.delete_duplicates.delete_dups(CLUSTER_YOLO_CONF, CLUSTER_YOLO_CONF_DEL)
+#Yolov5_Cluster.delete_duplicates.delete_dups(CLUSTER_YOLO_CONF, CLUSTER_YOLO_CONF_DEL)
 
 #call the crop function -> crops the image so a human can look over it
