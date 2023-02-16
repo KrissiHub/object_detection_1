@@ -42,15 +42,16 @@ def image_feature(read_folder, write_folder):
 #img_features,img_name=image_feature(img_path)
 
 def kmeans(features, img_name, write_folder, read_folder, im_read):
-    k=4
+    k=6
     clusters = KMeans(k, random_state = 40)
-    sil_vis(clusters, features)   
+    clusters.fit(features)
+    #sil_vis(clusters, features)   
     #saves the labels in a panda data frame for better sorting
     image_cluster = pd.DataFrame(img_name ,columns=['image'])
-    #image_cluster["clusterid"] = clusters.labels_
+    image_cluster["clusterid"] = clusters.labels_
    
 
-    #sort_to_dir(image_cluster, write_folder, read_folder)
+    sort_to_dir(image_cluster, write_folder, read_folder)
 
 
 def sort_to_dir(image_cluster, write_folder, read_folder):
@@ -67,17 +68,16 @@ def sort_to_dir(image_cluster, write_folder, read_folder):
 
 
 def sil_vis(clusters, features):
-    fig, ax = plt.subplots(7, 2, figsize=(15,8))
+    fig, ax = plt.subplots(3, 3, figsize=(15,8))
     features = np.array(features)
     sil = []
     for i in range(7,12):
-        clusters = KMeans(9, random_state = 40)
-        q, mod = divmod(9, 2)
+        clusters = KMeans(i, random_state = 40)
+        q, mod = divmod(i, 2)
         visualizer = SilhouetteVisualizer(clusters, colors='yellowbrick')
     
         sil.append(visualizer.fit(features))
-        
-    visualizer.show()
+        visualizer.show()
 
 
 

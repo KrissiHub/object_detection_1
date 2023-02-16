@@ -23,7 +23,7 @@ LABEL_YOLO = "Yolov5_Cluster/Label"
 CLUSTER_YOLO = "Yolo_Cluster"
 CLUSTER_YOLO_CONF = "Yolo_Cluster_Conf"
 CLUSTER_YOLO_CONF_DEL = "Yolo_Cluster_Conf_Del"
-KMEANS_CLUSTER = "Kmeans_Cluster"
+KMEANS_CLUSTER = "Kmeans_Cluster_5"
 KMEANS_TEST = "object_detection_1/Test_Kmeans"
 #the cropping information for the cut function
 MIN_WIDTH = 50
@@ -39,7 +39,7 @@ os.system("mkdir Cluster03_big_nog")
 os.system("mkdir Yolov5_Cluster/Label")
 os.system("mkdir Yolo_Cluster")
 os.system("mkdir Yolo_Cluster_Conf")
-os.system("mkdir Kmeans_Cluster")
+os.system("mkdir Kmeans_Cluster_5")
 
 #counter variables for the cluster function
 I = 0
@@ -61,7 +61,7 @@ COUNTER = 0
 #call the cluster funtcion -> clusters the cut images, so a human can look over it
 
 #OpenCV_Cluster.cluster.cluster_images(COUNTER, I, CROP_FOLDER, CROP_FOLDER)
-OpenCV_Cluster.kmeans.image_feature(KMEANS_TEST, KMEANS_CLUSTER)
+OpenCV_Cluster.kmeans.image_feature("5", KMEANS_CLUSTER)
 
 
 #YOLOV5_CLUSTER
